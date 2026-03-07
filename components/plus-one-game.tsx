@@ -4,9 +4,61 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Plus, Hand, Users, RotateCcw, Eye, EyeOff } from "lucide-react"
+import { Plus, Hand, Users, RotateCcw, Eye, EyeOff, Languages } from "lucide-react"
 
 type GamePhase = "setup" | "playing" | "handoff" | "reveal"
+type Language = "ca" | "en"
+
+const translations = {
+  ca: {
+    title: "Més Un",
+    subtitle: "Cada jugador afegeix +1 o passa en secret.",
+    subtitleLine2: "Reveleu el total al final!",
+    howManyPlayers: "Quants jugadors?",
+    startGame: "Comença el Joc",
+    playerOf: "Jugador {current} de {total}",
+    yourTurn: "Et toca!",
+    dontLetOthersSee: "No deixis que els altres vegin la teva elecció",
+    plusOne: "+1",
+    pass: "Passar",
+    choiceRecorded: "Elecció enregistrada!",
+    passDeviceTo: "Passa el dispositiu a",
+    player: "Jugador",
+    imPlayer: "Soc el Jugador {num}",
+    allVotesIn: "Tots els vots estan!",
+    everyoneGather: "Tots a prop per la revelació",
+    revealTotal: "Revela el Total",
+    finalCountIs: "El recompte final és...",
+    outOf: "de {total} jugadors han afegit +1",
+    showChoices: "Mostra Eleccions Individuals",
+    hideChoices: "Amaga Eleccions Individuals",
+    playAgain: "Torna a Jugar",
+  },
+  en: {
+    title: "Plus One",
+    subtitle: "Each player secretly adds +1 or passes.",
+    subtitleLine2: "Reveal the total at the end!",
+    howManyPlayers: "How many players?",
+    startGame: "Start Game",
+    playerOf: "Player {current} of {total}",
+    yourTurn: "It's your turn!",
+    dontLetOthersSee: "Don't let others see your choice",
+    plusOne: "+1",
+    pass: "Pass",
+    choiceRecorded: "Choice recorded!",
+    passDeviceTo: "Pass the device to",
+    player: "Player",
+    imPlayer: "I'm Player {num}",
+    allVotesIn: "All votes are in!",
+    everyoneGather: "Everyone gather around for the reveal",
+    revealTotal: "Reveal the Total",
+    finalCountIs: "The final count is...",
+    outOf: "out of {total} players added +1",
+    showChoices: "Show Individual Choices",
+    hideChoices: "Hide Individual Choices",
+    playAgain: "Play Again",
+  },
+}
 
 export function PlusOneGame() {
   const [phase, setPhase] = useState<GamePhase>("setup")
@@ -15,6 +67,9 @@ export function PlusOneGame() {
   const [choices, setChoices] = useState<boolean[]>([])
   const [showResult, setShowResult] = useState(false)
   const [showChoices, setShowChoices] = useState(false)
+  const [language, setLanguage] = useState<Language>("ca")
+
+  const t = translations[language]
 
   const startGame = () => {
     if (totalPlayers >= 2) {
@@ -57,21 +112,31 @@ export function PlusOneGame() {
         <Card className="w-full max-w-sm border-border bg-card">
           <CardContent className="pt-8 pb-8 px-6">
             <div className="text-center space-y-6">
+              <Button
+                onClick={() => setLanguage(language === "ca" ? "en" : "ca")}
+                variant="ghost"
+                size="sm"
+                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+              >
+                <Languages className="w-4 h-4 mr-1" />
+                {language === "ca" ? "EN" : "CA"}
+              </Button>
+
               <div className="space-y-2">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
                   <Users className="w-8 h-8 text-primary" />
                 </div>
-                <h1 className="text-3xl font-bold text-foreground">Plus One</h1>
+                <h1 className="text-3xl font-bold text-foreground">{t.title}</h1>
                 <p className="text-muted-foreground text-sm">
-                  Each player secretly adds +1 or passes.
+                  {t.subtitle}
                   <br />
-                  Reveal the total at the end!
+                  {t.subtitleLine2}
                 </p>
               </div>
 
               <div className="space-y-3">
                 <label className="text-sm font-medium text-foreground block text-left">
-                  How many players?
+                  {t.howManyPlayers}
                 </label>
                 <Input
                   type="number"
@@ -96,7 +161,7 @@ export function PlusOneGame() {
                 className="w-full h-14 text-lg font-semibold"
                 size="lg"
               >
-                Start Game
+                {t.startGame}
               </Button>
             </div>
           </CardContent>
@@ -109,13 +174,13 @@ export function PlusOneGame() {
             <div className="text-center space-y-8">
               <div className="space-y-2">
                 <p className="text-muted-foreground text-sm uppercase tracking-wider">
-                  Player {currentPlayer} of {totalPlayers}
+                  {t.playerOf.replace("{current}", String(currentPlayer)).replace("{total}", String(totalPlayers))}
                 </p>
                 <h2 className="text-2xl font-bold text-foreground">
-                  {"It's your turn!"}
+                  {t.yourTurn}
                 </h2>
                 <p className="text-muted-foreground text-sm">
-                  {"Don't let others see your choice"}
+                  {t.dontLetOthersSee}
                 </p>
               </div>
 
@@ -141,7 +206,7 @@ export function PlusOneGame() {
                   size="lg"
                 >
                   <Plus className="w-10 h-10" />
-                  +1
+                  {t.plusOne}
                 </Button>
                 <Button
                   onClick={() => makeChoice(false)}
@@ -150,7 +215,7 @@ export function PlusOneGame() {
                   size="lg"
                 >
                   <Hand className="w-10 h-10" />
-                  Pass
+                  {t.pass}
                 </Button>
               </div>
             </div>
@@ -168,10 +233,10 @@ export function PlusOneGame() {
               
               <div className="space-y-2">
                 <h2 className="text-2xl font-bold text-foreground">
-                  Choice recorded!
+                  {t.choiceRecorded}
                 </h2>
                 <p className="text-muted-foreground">
-                  Pass the device to <span className="text-accent font-semibold">Player {currentPlayer + 1}</span>
+                  {t.passDeviceTo} <span className="text-accent font-semibold">{t.player} {currentPlayer + 1}</span>
                 </p>
               </div>
 
@@ -193,7 +258,7 @@ export function PlusOneGame() {
                 className="w-full h-14 text-lg font-semibold"
                 size="lg"
               >
-                {"I'm Player " + (currentPlayer + 1)}
+                {t.imPlayer.replace("{num}", String(currentPlayer + 1))}
               </Button>
             </div>
           </CardContent>
@@ -212,10 +277,10 @@ export function PlusOneGame() {
                   
                   <div className="space-y-2">
                     <h2 className="text-2xl font-bold text-foreground">
-                      All votes are in!
+                      {t.allVotesIn}
                     </h2>
                     <p className="text-muted-foreground">
-                      Everyone gather around for the reveal
+                      {t.everyoneGather}
                     </p>
                   </div>
 
@@ -224,21 +289,21 @@ export function PlusOneGame() {
                     className="w-full h-14 text-lg font-semibold"
                     size="lg"
                   >
-                    Reveal the Total
+                    {t.revealTotal}
                   </Button>
                 </>
               ) : (
                 <>
                   <div className="space-y-4">
                     <p className="text-muted-foreground text-sm uppercase tracking-wider">
-                      The final count is...
+                      {t.finalCountIs}
                     </p>
                     <div className="relative">
                       <div className="text-8xl font-bold text-primary animate-in zoom-in-50 duration-500">
                         {total}
                       </div>
                       <p className="text-muted-foreground mt-2">
-                        out of {totalPlayers} players added +1
+                        {t.outOf.replace("{total}", String(totalPlayers))}
                       </p>
                     </div>
                   </div>
@@ -252,12 +317,12 @@ export function PlusOneGame() {
                       {showChoices ? (
                         <>
                           <EyeOff className="w-4 h-4 mr-2" />
-                          Hide Individual Choices
+                          {t.hideChoices}
                         </>
                       ) : (
                         <>
                           <Eye className="w-4 h-4 mr-2" />
-                          Show Individual Choices
+                          {t.showChoices}
                         </>
                       )}
                     </Button>
@@ -288,7 +353,7 @@ export function PlusOneGame() {
                     size="lg"
                   >
                     <RotateCcw className="w-5 h-5 mr-2" />
-                    Play Again
+                    {t.playAgain}
                   </Button>
                 </>
               )}
