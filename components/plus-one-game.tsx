@@ -14,6 +14,7 @@ export function PlusOneGame() {
   const [currentPlayer, setCurrentPlayer] = useState(1)
   const [choices, setChoices] = useState<boolean[]>([])
   const [showResult, setShowResult] = useState(false)
+  const [showChoices, setShowChoices] = useState(false)
 
   const startGame = () => {
     if (totalPlayers >= 2) {
@@ -45,6 +46,7 @@ export function PlusOneGame() {
     setChoices([])
     setCurrentPlayer(1)
     setShowResult(false)
+    setShowChoices(false)
   }
 
   const total = choices.filter(Boolean).length
@@ -242,21 +244,41 @@ export function PlusOneGame() {
                   </div>
 
                   <div className="pt-4 space-y-3">
-                    <div className="flex flex-wrap justify-center gap-2">
-                      {choices.map((choice, i) => (
-                        <div
-                          key={i}
-                          className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold transition-all animate-in fade-in-0 duration-300 ${
-                            choice
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted text-muted-foreground"
-                          }`}
-                          style={{ animationDelay: `${i * 100}ms` }}
-                        >
-                          {choice ? "+1" : "—"}
-                        </div>
-                      ))}
-                    </div>
+                    <Button
+                      onClick={() => setShowChoices(!showChoices)}
+                      variant="outline"
+                      className="w-full h-12"
+                    >
+                      {showChoices ? (
+                        <>
+                          <EyeOff className="w-4 h-4 mr-2" />
+                          Hide Individual Choices
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="w-4 h-4 mr-2" />
+                          Show Individual Choices
+                        </>
+                      )}
+                    </Button>
+                    
+                    {showChoices && (
+                      <div className="flex flex-wrap justify-center gap-2 pt-2">
+                        {choices.map((choice, i) => (
+                          <div
+                            key={i}
+                            className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold transition-all animate-in fade-in-0 duration-300 ${
+                              choice
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted text-muted-foreground"
+                            }`}
+                            style={{ animationDelay: `${i * 100}ms` }}
+                          >
+                            {choice ? "+1" : "—"}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <Button
