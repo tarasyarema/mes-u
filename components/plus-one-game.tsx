@@ -73,16 +73,24 @@ export function PlusOneGame() {
                 </label>
                 <Input
                   type="number"
-                  min={2}
-                  max={20}
-                  value={totalPlayers}
-                  onChange={(e) => setTotalPlayers(Math.max(2, parseInt(e.target.value) || 2))}
+                  min={0}
+                  max={99}
+                  value={totalPlayers === 0 ? "" : totalPlayers}
+                  onChange={(e) => {
+                    const val = e.target.value
+                    if (val === "") {
+                      setTotalPlayers(0)
+                    } else {
+                      setTotalPlayers(parseInt(val) || 0)
+                    }
+                  }}
                   className="text-center text-xl font-bold h-14 bg-input border-border text-foreground"
                 />
               </div>
 
               <Button
                 onClick={startGame}
+                disabled={totalPlayers < 2}
                 className="w-full h-14 text-lg font-semibold"
                 size="lg"
               >
