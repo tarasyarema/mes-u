@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Plus, Hand, Users, RotateCcw, Eye, EyeOff, Languages } from "lucide-react"
+import { Plus, Hand, Users, RotateCcw, Eye, EyeOff, Languages, Sun, Moon } from "lucide-react"
+import { useTheme } from "next-themes"
 
 type GamePhase = "setup" | "playing" | "handoff" | "reveal"
 type Language = "ca" | "en"
@@ -15,7 +16,7 @@ const translations = {
     subtitle: "Cada jugador afegeix +1 o passa en secret.",
     subtitleLine2: "Reveleu el total al final!",
     howManyPlayers: "Quants jugadors?",
-    startGame: "Comença el Joc",
+    startGame: "Comença el joc",
     playerOf: "Jugador {current} de {total}",
     yourTurn: "Et toca!",
     dontLetOthersSee: "No deixis que els altres vegin la teva elecció",
@@ -24,15 +25,15 @@ const translations = {
     choiceRecorded: "Elecció enregistrada!",
     passDeviceTo: "Passa el dispositiu a",
     player: "Jugador",
-    imPlayer: "Soc el Jugador {num}",
-    allVotesIn: "Tots els vots estan!",
-    everyoneGather: "Tots a prop per la revelació",
-    revealTotal: "Revela el Total",
+    imPlayer: "Sóc el jugador {num}",
+    allVotesIn: "Tots els vots recollits!",
+    everyoneGather: "Reuniu-vos per la revelació",
+    revealTotal: "Revela el total",
     finalCountIs: "El recompte final és...",
     outOf: "de {total} jugadors han afegit +1",
-    showChoices: "Mostra Eleccions Individuals",
-    hideChoices: "Amaga Eleccions Individuals",
-    playAgain: "Torna a Jugar",
+    showChoices: "Mostra les eleccions",
+    hideChoices: "Amaga les eleccions",
+    playAgain: "Torna a jugar",
   },
   en: {
     title: "Plus One",
@@ -68,6 +69,7 @@ export function PlusOneGame() {
   const [showResult, setShowResult] = useState(false)
   const [showChoices, setShowChoices] = useState(false)
   const [language, setLanguage] = useState<Language>("ca")
+  const { theme, setTheme } = useTheme()
 
   const t = translations[language]
 
@@ -112,15 +114,25 @@ export function PlusOneGame() {
         <Card className="w-full max-w-sm border-border bg-card">
           <CardContent className="pt-8 pb-8 px-6">
             <div className="text-center space-y-6">
-              <Button
-                onClick={() => setLanguage(language === "ca" ? "en" : "ca")}
-                variant="ghost"
-                size="sm"
-                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
-              >
-                <Languages className="w-4 h-4 mr-1" />
-                {language === "ca" ? "EN" : "CA"}
-              </Button>
+              <div className="absolute top-4 right-4 flex items-center gap-1">
+                <Button
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </Button>
+                <Button
+                  onClick={() => setLanguage(language === "ca" ? "en" : "ca")}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Languages className="w-4 h-4 mr-1" />
+                  {language === "ca" ? "EN" : "CA"}
+                </Button>
+              </div>
 
               <div className="space-y-2">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">

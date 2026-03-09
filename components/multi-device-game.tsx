@@ -20,7 +20,10 @@ import {
   Square,
   Copy,
   CheckCheck,
+  Sun,
+  Moon,
 } from "lucide-react"
+import { useTheme } from "next-themes"
 import { QRCodeSVG } from "qrcode.react"
 import type { RoomState } from "@/lib/redis"
 
@@ -30,9 +33,9 @@ type Language = "ca" | "en"
 const translations = {
   ca: {
     title: "Mes U",
-    subtitle: "Versió Multidispositiu",
-    createRoom: "Crea Sala",
-    joinRoom: "Uneix-te a Sala",
+    subtitle: "Versió multidispositiu",
+    createRoom: "Crea una sala",
+    joinRoom: "Uneix-te a una sala",
     yourName: "El teu nom",
     roomCode: "Codi de sala",
     create: "Crear",
@@ -41,31 +44,31 @@ const translations = {
     scanQR: "Escaneja el QR o comparteix el codi",
     playersInRoom: "Jugadors a la sala",
     waitingForPlayers: "Esperant jugadors...",
-    startGame: "Comença el Joc",
+    startGame: "Comença el joc",
     waitingForLeader: "Esperant que el líder comenci...",
     yourTurn: "Et toca!",
     dontLetOthersSee: "Fes la teva elecció",
     plusOne: "+1",
     pass: "Passar",
     voteRecorded: "Vot enregistrat!",
-    waitingForOthers: "Esperant altres jugadors...",
+    waitingForOthers: "Esperant els altres jugadors...",
     playersVoted: "{voted} de {total} han votat",
     gameFinished: "Joc acabat!",
     finalCountIs: "El recompte final és...",
     outOf: "de {total} jugadors han afegit +1",
-    showChoices: "Mostra Eleccions",
-    hideChoices: "Amaga Eleccions",
-    playAgain: "Torna a Jugar",
-    stopGame: "Atura el Joc",
-    backToLobby: "Torna a la Sala",
+    showChoices: "Mostra les eleccions",
+    hideChoices: "Amaga les eleccions",
+    playAgain: "Torna a jugar",
+    stopGame: "Atura el joc",
+    backToLobby: "Torna a la sala",
     onlyLeaderSees: "Només el líder veu les eleccions individuals",
     leader: "Líder",
     you: "Tu",
     voted: "Ha votat",
     waiting: "Esperant",
     copied: "Copiat!",
-    copyCode: "Copia codi",
-    needMorePlayers: "Cal mínim 2 jugadors",
+    copyCode: "Copia el codi",
+    needMorePlayers: "Calen mínim 2 jugadors",
     roomNotFound: "Sala no trobada",
     gameInProgress: "El joc ja ha començat",
   },
@@ -124,6 +127,7 @@ export function MultiDeviceGame() {
   const [copied, setCopied] = useState(false)
   const [showChoices, setShowChoices] = useState(false)
   const [hasVoted, setHasVoted] = useState(false)
+  const { theme, setTheme } = useTheme()
 
   const t = translations[language]
 
@@ -302,15 +306,25 @@ export function MultiDeviceGame() {
         <Card className="w-full max-w-sm border-border bg-card">
           <CardContent className="pt-8 pb-8 px-6">
             <div className="text-center space-y-6">
-              <Button
-                onClick={() => setLanguage(language === "ca" ? "en" : "ca")}
-                variant="ghost"
-                size="sm"
-                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
-              >
-                <Languages className="w-4 h-4 mr-1" />
-                {language === "ca" ? "EN" : "CA"}
-              </Button>
+              <div className="absolute top-4 right-4 flex items-center gap-1">
+                <Button
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </Button>
+                <Button
+                  onClick={() => setLanguage(language === "ca" ? "en" : "ca")}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Languages className="w-4 h-4 mr-1" />
+                  {language === "ca" ? "EN" : "CA"}
+                </Button>
+              </div>
 
               <div className="space-y-2">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">

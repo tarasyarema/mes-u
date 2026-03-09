@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Users, Smartphone, Monitor, Languages } from "lucide-react"
+import { Users, Smartphone, Monitor, Languages, Sun, Moon } from "lucide-react"
+import { useTheme } from "next-themes"
 import Link from "next/link"
 import { PlusOneGame } from "@/components/plus-one-game"
 
@@ -33,6 +34,7 @@ const translations = {
 export default function HomePage() {
   const [language, setLanguage] = useState<Language>("ca")
   const [multiDeviceEnabled, setMultiDeviceEnabled] = useState<boolean | null>(null)
+  const { theme, setTheme } = useTheme()
   const t = translations[language]
 
   useEffect(() => {
@@ -61,15 +63,25 @@ export default function HomePage() {
       <Card className="w-full max-w-sm border-border bg-card">
         <CardContent className="pt-8 pb-8 px-6">
           <div className="text-center space-y-6">
-            <Button
-              onClick={() => setLanguage(language === "ca" ? "en" : "ca")}
-              variant="ghost"
-              size="sm"
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
-            >
-              <Languages className="w-4 h-4 mr-1" />
-              {language === "ca" ? "EN" : "CA"}
-            </Button>
+            <div className="absolute top-4 right-4 flex items-center gap-1">
+              <Button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </Button>
+              <Button
+                onClick={() => setLanguage(language === "ca" ? "en" : "ca")}
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <Languages className="w-4 h-4 mr-1" />
+                {language === "ca" ? "EN" : "CA"}
+              </Button>
+            </div>
 
             <div className="space-y-2">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
