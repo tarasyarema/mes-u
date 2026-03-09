@@ -13,7 +13,7 @@ type Language = "ca" | "en"
 
 const translations = {
   ca: {
-    title: "Mes U",
+    title: "Més U",
     subtitle: "Cada jugador afegeix +1 o passa en secret.",
     subtitleLine2: "Reveleu el total al final!",
     howManyPlayers: "Quants jugadors?",
