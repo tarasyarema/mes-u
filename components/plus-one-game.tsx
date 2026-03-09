@@ -390,6 +390,10 @@ export function PlusOneGame() {
           </CardContent>
         </Card>
       )}
+
+      <p className="fixed bottom-4 left-0 right-0 text-center text-xs text-muted-foreground">
+        Made with {"<3"} by La Famiglia
+      </p>
     </main>
   )
 }
