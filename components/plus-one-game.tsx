@@ -4,18 +4,20 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Plus, Hand, Users, RotateCcw, Eye, EyeOff, Languages } from "lucide-react"
+import { Plus, Hand, Users, RotateCcw, Eye, EyeOff, Languages, Sun, Moon, Home } from "lucide-react"
+import Link from "next/link"
+import { useTheme } from "next-themes"
 
 type GamePhase = "setup" | "playing" | "handoff" | "reveal"
 type Language = "ca" | "en"
 
 const translations = {
   ca: {
-    title: "Més U",
+    title: "Mes U",
     subtitle: "Cada jugador afegeix +1 o passa en secret.",
     subtitleLine2: "Reveleu el total al final!",
     howManyPlayers: "Quants jugadors?",
-    startGame: "Comença el Joc",
+    startGame: "Comença el joc",
     playerOf: "Jugador {current} de {total}",
     yourTurn: "Et toca!",
     dontLetOthersSee: "No deixis que els altres vegin la teva elecció",
@@ -24,15 +26,16 @@ const translations = {
     choiceRecorded: "Elecció enregistrada!",
     passDeviceTo: "Passa el dispositiu a",
     player: "Jugador",
-    imPlayer: "Soc el Jugador {num}",
-    allVotesIn: "Tots els vots estan!",
-    everyoneGather: "Tots a prop per la revelació",
-    revealTotal: "Revela el Total",
+    imPlayer: "Sóc el jugador {num}",
+    allVotesIn: "Tots els vots recollits!",
+    everyoneGather: "Reuniu-vos per la revelació",
+    revealTotal: "Revela el total",
     finalCountIs: "El recompte final és...",
     outOf: "de {total} jugadors han afegit +1",
-    showChoices: "Mostra Eleccions Individuals",
-    hideChoices: "Amaga Eleccions Individuals",
-    playAgain: "Torna a Jugar",
+    showChoices: "Mostra les eleccions",
+    hideChoices: "Amaga les eleccions",
+    playAgain: "Torna a jugar",
+    home: "Inici",
   },
   en: {
     title: "Plus One",
@@ -57,6 +60,7 @@ const translations = {
     showChoices: "Show Individual Choices",
     hideChoices: "Hide Individual Choices",
     playAgain: "Play Again",
+    home: "Home",
   },
 }
 
@@ -68,6 +72,7 @@ export function PlusOneGame() {
   const [showResult, setShowResult] = useState(false)
   const [showChoices, setShowChoices] = useState(false)
   const [language, setLanguage] = useState<Language>("ca")
+  const { theme, setTheme } = useTheme()
 
   const t = translations[language]
 
@@ -112,15 +117,25 @@ export function PlusOneGame() {
         <Card className="w-full max-w-sm border-border bg-card">
           <CardContent className="pt-8 pb-8 px-6">
             <div className="text-center space-y-6">
-              <Button
-                onClick={() => setLanguage(language === "ca" ? "en" : "ca")}
-                variant="ghost"
-                size="sm"
-                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
-              >
-                <Languages className="w-4 h-4 mr-1" />
-                {language === "ca" ? "EN" : "CA"}
-              </Button>
+              <div className="absolute top-4 right-4 flex items-center gap-1">
+                <Button
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </Button>
+                <Button
+                  onClick={() => setLanguage(language === "ca" ? "en" : "ca")}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Languages className="w-4 h-4 mr-1" />
+                  {language === "ca" ? "EN" : "CA"}
+                </Button>
+              </div>
 
               <div className="space-y-2">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
@@ -163,6 +178,13 @@ export function PlusOneGame() {
               >
                 {t.startGame}
               </Button>
+
+              <Link href="/">
+                <Button variant="ghost" className="w-full h-10 text-muted-foreground">
+                  <Home className="w-4 h-4 mr-2" />
+                  {t.home}
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
@@ -346,21 +368,32 @@ export function PlusOneGame() {
                     )}
                   </div>
 
-                  <Button
-                    onClick={resetGame}
-                    variant="secondary"
-                    className="w-full h-14 text-lg font-semibold"
-                    size="lg"
-                  >
-                    <RotateCcw className="w-5 h-5 mr-2" />
-                    {t.playAgain}
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={resetGame}
+                      variant="secondary"
+                      className="flex-1 h-14 text-lg font-semibold"
+                      size="lg"
+                    >
+                      <RotateCcw className="w-5 h-5 mr-2" />
+                      {t.playAgain}
+                    </Button>
+                    <Link href="/">
+                      <Button variant="outline" className="h-14 px-4">
+                        <Home className="w-5 h-5" />
+                      </Button>
+                    </Link>
+                  </div>
                 </>
               )}
             </div>
           </CardContent>
         </Card>
       )}
+
+      <p className="fixed bottom-4 left-0 right-0 text-center text-xs text-muted-foreground">
+        Made with 💛 by La Famiglia
+      </p>
     </main>
   )
 }
