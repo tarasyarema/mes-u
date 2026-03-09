@@ -14,7 +14,7 @@ export const viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Mes U - Team Game',
+  title: 'Més U - Team Game',
   description: 'A fun party game where players secretly add or pass',
   generator: 'v0.app',
 }
