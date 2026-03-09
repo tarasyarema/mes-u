@@ -1,16 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, Smartphone, Monitor, Languages } from "lucide-react"
 import Link from "next/link"
+import { PlusOneGame } from "@/components/plus-one-game"
 
 type Language = "ca" | "en"
 
 const translations = {
   ca: {
-    title: "Més U",
+    title: "Mes U",
     subtitle: "Cada jugador afegeix +1 o passa en secret.",
     subtitleLine2: "Reveleu el total al final!",
     singleDevice: "Un Dispositiu",
@@ -31,7 +32,29 @@ const translations = {
 
 export default function HomePage() {
   const [language, setLanguage] = useState<Language>("ca")
+  const [multiDeviceEnabled, setMultiDeviceEnabled] = useState<boolean | null>(null)
   const t = translations[language]
+
+  useEffect(() => {
+    fetch("/api/config")
+      .then((res) => res.json())
+      .then((data) => setMultiDeviceEnabled(data.multiDeviceEnabled))
+      .catch(() => setMultiDeviceEnabled(false))
+  }, [])
+
+  // If Redis is not configured, directly show single-device game
+  if (multiDeviceEnabled === false) {
+    return <PlusOneGame />
+  }
+
+  // Loading state
+  if (multiDeviceEnabled === null) {
+    return (
+      <main className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </main>
+    )
+  }
 
   return (
     <main className="min-h-screen bg-background flex flex-col items-center justify-center p-4">

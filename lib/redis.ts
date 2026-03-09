@@ -1,9 +1,16 @@
 import { Redis } from "@upstash/redis"
 
-export const redis = new Redis({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
-})
+function getRedis(): Redis | null {
+  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    return null
+  }
+  return new Redis({
+    url: process.env.KV_REST_API_URL,
+    token: process.env.KV_REST_API_TOKEN,
+  })
+}
+
+export const redis = getRedis()
 
 export type RoomState = {
   id: string
@@ -29,7 +36,12 @@ export function generatePlayerId(): string {
 
 const ROOM_TTL = 60 * 60 * 2 // 2 hours
 
+export function isRedisConfigured(): boolean {
+  return redis !== null
+}
+
 export async function createRoom(leaderId: string, leaderName: string): Promise<RoomState> {
+  if (!redis) throw new Error("Redis not configured")
   const roomCode = generateRoomCode()
   const room: RoomState = {
     id: roomCode,
@@ -44,13 +56,16 @@ export async function createRoom(leaderId: string, leaderName: string): Promise<
 }
 
 export async function getRoom(roomCode: string): Promise<RoomState | null> {
+  if (!redis) throw new Error("Redis not configured")
   return await redis.get<RoomState>(`room:${roomCode}`)
 }
 
 export async function updateRoom(room: RoomState): Promise<void> {
+  if (!redis) throw new Error("Redis not configured")
   await redis.set(`room:${room.id}`, room, { ex: ROOM_TTL })
 }
 
 export async function deleteRoom(roomCode: string): Promise<void> {
+  if (!redis) throw new Error("Redis not configured")
   await redis.del(`room:${roomCode}`)
 }

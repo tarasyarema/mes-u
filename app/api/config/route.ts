@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server"
+import { isRedisConfigured } from "@/lib/redis"
 
 export async function GET() {
-  const hasRedis = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN)
-  
   return NextResponse.json({ 
-    multiDeviceEnabled: hasRedis 
+    multiDeviceEnabled: isRedisConfigured() 
   })
 }

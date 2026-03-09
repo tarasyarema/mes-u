@@ -29,7 +29,7 @@ type Language = "ca" | "en"
 
 const translations = {
   ca: {
-    title: "Més U",
+    title: "Mes U",
     subtitle: "Versió Multidispositiu",
     createRoom: "Crea Sala",
     joinRoom: "Uneix-te a Sala",
