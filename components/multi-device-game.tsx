@@ -119,11 +119,15 @@ const translations = {
   },
 }
 
-export function MultiDeviceGame() {
-  const [view, setView] = useState<GameView>("home")
+interface MultiDeviceGameProps {
+  initialCode?: string
+}
+
+export function MultiDeviceGame({ initialCode }: MultiDeviceGameProps) {
+  const [view, setView] = useState<GameView>(initialCode ? "join" : "home")
   const [language, setLanguage] = useState<Language>("ca")
   const [playerName, setPlayerName] = useState("")
-  const [roomCode, setRoomCode] = useState("")
+  const [roomCode, setRoomCode] = useState(initialCode || "")
   const [playerId, setPlayerId] = useState<string | null>(null)
   const [room, setRoom] = useState<RoomState | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -147,13 +151,16 @@ export function MultiDeviceGame() {
         setRoom(data.room)
 
         // Update view based on room state
+        const player = data.room.players.find((p: { id: string }) => p.id === playerId)
+        const playerHasVoted = player?.hasVoted ?? false
+        
         if (data.room.phase === "waiting") {
           setView("lobby")
           setHasVoted(false)
         } else if (data.room.phase === "playing") {
-          const player = data.room.players.find((p: { id: string }) => p.id === playerId)
-          if (player?.hasVoted) {
-            setHasVoted(true)
+          // Sync local hasVoted with server state (important for restart)
+          setHasVoted(playerHasVoted)
+          if (playerHasVoted) {
             setView("voted")
           } else {
             setView("playing")
