@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Plus, Hand, Users, RotateCcw, Eye, EyeOff, Languages, Sun, Moon } from "lucide-react"
+import { Plus, Hand, Users, RotateCcw, Eye, EyeOff, Languages, Sun, Moon, Home } from "lucide-react"
+import Link from "next/link"
 import { useTheme } from "next-themes"
 
 type GamePhase = "setup" | "playing" | "handoff" | "reveal"
@@ -34,6 +35,7 @@ const translations = {
     showChoices: "Mostra les eleccions",
     hideChoices: "Amaga les eleccions",
     playAgain: "Torna a jugar",
+    home: "Inici",
   },
   en: {
     title: "Plus One",
@@ -58,6 +60,7 @@ const translations = {
     showChoices: "Show Individual Choices",
     hideChoices: "Hide Individual Choices",
     playAgain: "Play Again",
+    home: "Home",
   },
 }
 
@@ -175,6 +178,13 @@ export function PlusOneGame() {
               >
                 {t.startGame}
               </Button>
+
+              <Link href="/">
+                <Button variant="ghost" className="w-full h-10 text-muted-foreground">
+                  <Home className="w-4 h-4 mr-2" />
+                  {t.home}
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
@@ -358,15 +368,22 @@ export function PlusOneGame() {
                     )}
                   </div>
 
-                  <Button
-                    onClick={resetGame}
-                    variant="secondary"
-                    className="w-full h-14 text-lg font-semibold"
-                    size="lg"
-                  >
-                    <RotateCcw className="w-5 h-5 mr-2" />
-                    {t.playAgain}
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={resetGame}
+                      variant="secondary"
+                      className="flex-1 h-14 text-lg font-semibold"
+                      size="lg"
+                    >
+                      <RotateCcw className="w-5 h-5 mr-2" />
+                      {t.playAgain}
+                    </Button>
+                    <Link href="/">
+                      <Button variant="outline" className="h-14 px-4">
+                        <Home className="w-5 h-5" />
+                      </Button>
+                    </Link>
+                  </div>
                 </>
               )}
             </div>

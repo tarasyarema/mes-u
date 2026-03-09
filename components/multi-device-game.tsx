@@ -22,8 +22,10 @@ import {
   CheckCheck,
   Sun,
   Moon,
+  Home,
 } from "lucide-react"
 import { useTheme } from "next-themes"
+import Link from "next/link"
 import { QRCodeSVG } from "qrcode.react"
 import type { RoomState } from "@/lib/redis"
 
@@ -71,6 +73,7 @@ const translations = {
     needMorePlayers: "Calen mínim 2 jugadors",
     roomNotFound: "Sala no trobada",
     gameInProgress: "El joc ja ha començat",
+    home: "Inici",
   },
   en: {
     title: "Plus One",
@@ -112,6 +115,7 @@ const translations = {
     needMorePlayers: "Need at least 2 players",
     roomNotFound: "Room not found",
     gameInProgress: "Game already in progress",
+    home: "Home",
   },
 }
 
@@ -348,6 +352,13 @@ export function MultiDeviceGame() {
                   <Users className="w-5 h-5 mr-2" />
                   {t.joinRoom}
                 </Button>
+
+                <Link href="/">
+                  <Button variant="ghost" className="w-full h-10 text-muted-foreground">
+                    <Home className="w-4 h-4 mr-2" />
+                    {t.home}
+                  </Button>
+                </Link>
               </div>
             </div>
           </CardContent>
@@ -503,6 +514,13 @@ export function MultiDeviceGame() {
                   {room.players.length < 2 ? t.needMorePlayers : t.startGame}
                 </Button>
               )}
+
+              <Link href="/">
+                <Button variant="ghost" className="w-full h-10 text-muted-foreground">
+                  <Home className="w-4 h-4 mr-2" />
+                  {t.home}
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
